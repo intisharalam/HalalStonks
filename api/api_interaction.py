@@ -9,10 +9,10 @@ import pandas as pd
 # Load environment variables from .env file
 load_dotenv()
 
-STOCK_API_KEY = os.getenv('NEXT_PUBLIC_STOCK_API_KEY')
+STOCK_API_KEY = 'gJK3pAifqyVdjbMMoDy6bWQyyIHoBxFE'
 #print(STOCK_API_KEY)
 
-NEWS_API_KEY = os.getenv('NEXT_PUBLIC_NEWS_API_KEY')
+NEWS_API_KEY = 'FwWJ7UpulXL_blpe3AEOlkBWzSKIxP4NVfvHH_jeYPkVem9f'
 
 
 async def fetch_news_data():
