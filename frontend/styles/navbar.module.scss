@@ -84,6 +84,16 @@
         flex-direction: column;
     }
 
+    .nav li:hover {
+        margin: 0;
+        transition: all 0.1s;
+    }
+    
+    .nav li:hover a {
+        margin: 0;
+        transition: all 0.1s;
+    }
+
     .navTop {
         display: flex;
         flex-direction: row;
@@ -170,6 +180,10 @@
     .nav_menu_bar_active div:nth-child(2) {
         opacity: 0;
         transition: all 0.15s;
+    }
+
+    .nav a {
+        font-size: clamp(16px, 2.5vw, 28px);
     }
     
 }
