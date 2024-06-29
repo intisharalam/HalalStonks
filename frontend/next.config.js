@@ -1,14 +1,13 @@
 // next.config.js
 
 module.exports = {
-  async rewrites() {
-    const rewriteConfig = [
+  async redirects() {
+    return [
       {
         source: '/',
-        destination: '/home', // Example destination for your Next.js routes
+        destination: '/home',
+        permanent: true,
       },
     ];
-
-    return rewriteConfig;
   },
 };

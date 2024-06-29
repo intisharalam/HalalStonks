@@ -11,7 +11,7 @@ const NewsFeed = () => {
   useEffect(() => {
     const fetchNewsFeed = async () => {
       try {
-        const response = await axios.get('/api/get_newsfeed'); // Fetch data from your FastAPI endpoint
+        const response = await axios.get('https://halal-stonks-backend.vercel.app/api/get_newsfeed'); // Fetch data from your FastAPI endpoint
         setNewsFeed(response.data.data); // Assuming your backend returns { message: ..., data: ... }
       } catch (error) {
         console.error('Error fetching news feed:', error);

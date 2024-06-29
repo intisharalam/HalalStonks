@@ -33,7 +33,7 @@ function SearchBar({ onSelect }) {
         }
     
         try {
-            const apiUrl = `/api/search_symbols`;
+            const apiUrl = `https://halal-stonks-backend.vercel.app/api/search_symbols`;
             const response = await axios.post(apiUrl, { query });
     
             if (response.data.results) {
