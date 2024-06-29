@@ -1,5 +1,4 @@
 from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from api_interaction import fetch_company_financial_data, fetch_news_data, search_company_symbols
 from exceptions import CustomException
@@ -7,19 +6,6 @@ import uvicorn
 
 app = FastAPI()
 
-# Allow CORS for localhost:3000
-origins = [
-    "http://localhost:3000",
-    "https://halal-stonks.vercel.app"
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 class SymbolRequest(BaseModel):
     symbol: str
@@ -27,9 +13,14 @@ class SymbolRequest(BaseModel):
 class SymbolSearchRequest(BaseModel):
     query: str
 
-@app.get("/api/health")
+
+@app.get("/")
 async def read_health():
     return {"status": "OK"}
+
+@app.get("/multiply/")
+async def multiply_numbers(x: int, y: int):
+    return {"result": x * y}
 
 @app.post("/api/search_symbols")
 async def search_symbols(request: SymbolSearchRequest):

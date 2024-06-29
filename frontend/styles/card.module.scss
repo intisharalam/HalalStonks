@@ -1,0 +1,51 @@
+.container {
+    display: flex;
+    justify-content: center;
+    flex-flow: column nowrap;
+
+    row-gap: 1vw;
+    padding: 24px;
+
+    width: 28.5vw;
+    height: 15vw;
+
+    max-width: 550px;
+    max-height: 290px;
+
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    box-shadow: 0 0 10px 1px #E0E0E0;
+
+    .topText {
+        font-weight: 600;
+        font-size: clamp(1rem, 2.5vw, 34px);
+    }
+
+    .middleText {
+        font-weight: 600;
+        font-size: clamp(1rem, 4vw, 64px);
+    }
+
+    .bottomText {
+        font-weight: 500;
+        font-size: clamp(1rem, 2vw, 30px);
+        color: #828282;
+    }
+}
+
+@media screen and (max-width: 845px) {
+    .container{
+        width: 75vw;
+        height: 30vw;
+        margin: 0 0 1rem 0;
+        .topText{
+            font-size: clamp(1rem, 4vw, 44px);
+        }
+        .middleText {
+            font-size: clamp(1rem, 7vw, 84px);
+        }
+        .bottomText{
+            font-size: clamp(1rem, 3vw, 30px);
+        }
+    }
+}

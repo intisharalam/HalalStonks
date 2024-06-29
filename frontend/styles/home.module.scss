@@ -1,0 +1,98 @@
+@import "../utilities/variables";
+
+/* General styles */
+.container_home {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    justify-content: space-evenly;
+    height: 90%;
+  
+    .container_search {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 1vw;
+
+        .logoImg {
+            width: 274px;
+            height: 274px;
+            margin: 0 0 clamp(1px, 1vw, 15px) 0;
+        }
+
+        .symbolInput {
+            width: 100%;
+            max-width: 300px;
+            padding: 10px;
+            margin: 20px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .redirectButton {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #000000;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.2s;
+        }
+
+        .redirectButton:hover {
+            background-color: #ff8e3c;
+        }
+    }
+  
+    .container_intro {
+        padding: 5px;
+        display: flex;
+        flex-direction: column;
+        row-gap: clamp(10px, 2vh, 15px);
+
+        .intro_greet {
+            font-size: 64px;
+        }
+
+        .intro_subheading {
+            font-size: 24px;
+            font-weight: 300;
+            color: #828282;
+        }
+
+        .intro_text {
+            font-weight: 500;
+            margin: 10px clamp(1vw, 5vw, calc(2vw + 10px)) 0 0;
+        }
+    }
+}
+
+@media screen and (max-width:845px) {
+    /* For screens 768px and above, revert to two-column layout */
+    .container_home{
+        display: flex;
+        flex-direction: column-reverse;
+        margin: 0 2vw;
+
+        .container_intro {
+            .intro_text, .intro_greet, .intro_subheading {
+                text-align: center;
+                margin: 0;
+            }
+
+            .intro_greet {
+                font-size: clamp(44px, 5vw, 64px);
+            }
+        }
+    
+        .container_search {
+            .logoImg {
+                width: clamp(170px, 5vw, 224px);
+                height: clamp(170px, 5vw, 224px);
+            }
+        }
+    }
+
+}
