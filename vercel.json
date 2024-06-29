@@ -1,26 +1,12 @@
 {
-    "version": 2,
-    "builds": [
-      {
-        "src": "next.config.js",
-        "use": "@now/next"
-      }
-    ],
-    "routes": [
-      {
-        "src": "/api/(.*)",
-        "dest": "https://halal-stonks.vercel.app/api/$1",
-        "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
-      },
-      {
-        "src": "/(.*)",
-        "dest": "/$1",
-        "headers": {
-          "X-Frame-Options": "DENY",
-          "X-XSS-Protection": "1; mode=block",
-          "Referrer-Policy": "same-origin"
-        }
-      }
-    ]
+  "version": 2,
+  "builds": [
+    { "src": "index.py", "use": "@vercel/python" }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "/index.py" }
+  ],
+  "env": {
+    "APP_MODULE": "index:app"
   }
-  
+}

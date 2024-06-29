@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from api_interaction import fetch_company_financial_data, fetch_news_data, search_company_symbols
 from exceptions import CustomException
+import uvicorn
 
 app = FastAPI()
 
@@ -61,3 +62,7 @@ async def get_newsfeed():
         return {"message": "News feed fetched successfully", "data": news_data}
     except CustomException as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+if __name__ == "__index__":
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
