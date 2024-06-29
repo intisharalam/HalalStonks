@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from api_interaction import fetch_company_financial_data, fetch_news_data, search_company_symbols
 from exceptions import CustomException
@@ -6,13 +7,27 @@ import uvicorn
 
 app = FastAPI()
 
+# CORS Configuration
+origins = [
+    "http://localhost:3000",  # Allow requests from your local frontend
+    "https://your-vercel-app.vercel.app",  # Add your Vercel frontend URL here
+    # Add more origins as needed
+]
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["GET", "POST"],
+    allow_headers=["*"],
+)
+
+# Your existing FastAPI routes
 class SymbolRequest(BaseModel):
     symbol: str
 
 class SymbolSearchRequest(BaseModel):
     query: str
-
 
 @app.get("/")
 async def read_health():
@@ -54,6 +69,5 @@ async def get_newsfeed():
     except CustomException as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-
-if __name__ == "__index__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)
