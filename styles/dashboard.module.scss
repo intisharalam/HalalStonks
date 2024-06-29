@@ -1,0 +1,105 @@
+.container {
+    margin: 0 5vw;
+    
+    .stockName {
+        display: flex;
+        margin: 32px 0;
+        justify-content: space-between;
+        align-items: center;
+        
+        .ticker {
+            display: flex;
+            justify-content: center;
+            flex-flow: column nowrap;
+        
+            font-weight: 600;
+            font-size: clamp(1rem, 1.5vw, 24px);
+        
+            padding: 24px;
+            width: auto;
+            height: 5vw;
+            max-height: 70px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px 1px #E0E0E0;
+            
+            .sector {
+                font-weight: 300;
+                color: #828282;
+            }
+        }
+
+    }
+    .cardRow {
+        display: flex;
+        justify-content: space-between;
+    }
+    .stockData {
+        display: flex;
+        margin: 32px 0;
+        justify-content: space-between;   
+    }
+    .financialData {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+}
+
+@media screen and (max-width: 845px) {
+    .container{
+        margin: 0;
+        .stockName{
+            flex-direction: column-reverse;
+            .ticker{
+                width: 75vw;
+                height: auto;
+            }
+        }
+
+    .cardRow {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        }
+
+    .stockData {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .financialData {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        padding: 0.5rem 12.5vw;
+    }
+}
+}
+
+@media screen and (max-width: 1600px) {
+    .container {
+        .financialData {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+
+            .balanceSheets {
+                margin-bottom: 2.5rem;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 845px) {
+    .container {
+        .financialData {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+  }
