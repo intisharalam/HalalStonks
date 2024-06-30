@@ -1,6 +1,7 @@
-// next.config.js
+// next.config.mjs
 
-module.exports = {
+const { redirects } = require('next/dist/next-server/server/api-utils');
+const nextConfig = {
   async redirects() {
     return [
       {
@@ -11,3 +12,5 @@ module.exports = {
     ];
   },
 };
+
+export default nextConfig;

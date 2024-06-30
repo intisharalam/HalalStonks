@@ -10,7 +10,7 @@ app = FastAPI()
 # CORS Configuration
 origins = [
     "http://localhost:3000",  # Allow requests from your local frontend
-    "https://your-vercel-app.vercel.app",  # Add your Vercel frontend URL here
+    "https://halal-stonks-ceu22mixz-intisharalams-projects.vercel.app",  # Add your Vercel frontend URL here
     # Add more origins as needed
 ]
 
