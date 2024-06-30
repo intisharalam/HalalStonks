@@ -7,18 +7,11 @@ import uvicorn
 
 app = FastAPI()
 
-# CORS Configuration
-origins = [
-    "http://localhost:3000",  # Allow requests from your local frontend
-    "https://halal-stonks-backend.vercel.app",  # Add your Vercel frontend URL here
-    # Add more origins as needed
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["GET", "POST"],
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
