@@ -1,11 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  async redirects() {
+  reactStrictMode: true,
+  async rewrites() {
     return [
       {
         source: '/',
         destination: '/home',
-        permanent: true,
       },
     ];
   },
