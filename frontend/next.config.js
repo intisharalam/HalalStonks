@@ -2,12 +2,20 @@
 const nextConfig = {
   reactStrictMode: true,
   async rewrites() {
-    return [
-      {
-        source: '/',
-        destination: '/home',
-      },
-    ];
+    return {
+      beforeFiles: [
+        {
+          source: '/',
+          destination: '/home',
+        },
+      ],
+      afterFiles: [
+        {
+          source: '/:path*',
+          destination: '/home',
+        },
+      ],
+    };
   },
 };
 
