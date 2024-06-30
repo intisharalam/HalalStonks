@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from api_interaction import fetch_company_financial_data, fetch_news_data, search_company_symbols
 from exceptions import CustomException
