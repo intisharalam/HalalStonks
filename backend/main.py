@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException
-from starlette.middleware.cors import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from api_interaction import fetch_company_financial_data, fetch_news_data, search_company_symbols
 from exceptions import CustomException
@@ -7,11 +7,18 @@ import uvicorn
 
 app = FastAPI()
 
+# CORS Configuration
+origins = [
+    "http://localhost:3000",  # Allow requests from your local frontend
+    "https://halal-stonks.vercel.app",  # Add your Vercel frontend URL here
+    # Add more origins as needed
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
 
