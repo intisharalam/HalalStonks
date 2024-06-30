@@ -11,8 +11,8 @@ app = FastAPI()
 origins = [
     "http://localhost:3000",  # Allow requests from your local frontend
     "https://halal-stonks.vercel.app",  # Add your Vercel frontend URL here
-    # Add more origins as needed
-]
+    "https://halal-stonks-backend.vercel.app",
+    ]
 
 app.add_middleware(
     CORSMiddleware,
