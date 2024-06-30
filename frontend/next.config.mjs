@@ -1,6 +1,4 @@
-// next.config.mjs
-
-const { redirects } = require('next/dist/next-server/server/api-utils');
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   async redirects() {
     return [
