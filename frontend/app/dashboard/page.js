@@ -39,7 +39,7 @@ export default function Dashboard() {
       const companyResponse = await axios.post('https://halal-stonks-backend.vercel.app/api/get_company_data', { symbol });
       const companyData = companyResponse.data;
       setCompanyData(companyData);
-      console.log(companyData.data['Halal Stock Criteria Results'])
+      /*console.log(companyData.data['Halal Score'])*/
     } catch (error) {
       console.error('Error fetching data:', error);
       setCompanyData({}); // Optionally, handle error state
