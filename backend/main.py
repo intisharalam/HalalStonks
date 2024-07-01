@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from api_interaction import fetch_company_financial_data, fetch_news_data, search_company_symbols
+from api_interaction import fetch_company_financial_data, fetch_news_data, search_company_symbols, check_halal_stock
 from exceptions import CustomException
 import uvicorn
 
@@ -33,10 +33,6 @@ class SymbolSearchRequest(BaseModel):
 async def read_health():
     return {"status": "OK"}
 
-@app.get("/multiply/")
-async def multiply_numbers(x: int, y: int):
-    return {"result": x * y}
-
 @app.post("/api/search_symbols")
 async def search_symbols(request: SymbolSearchRequest):
     query = request.query
@@ -60,6 +56,17 @@ async def get_company_data(request: SymbolRequest):
         **company_data,
     }
     return {"message": "Company data fetched successfully", "data": combined_data}
+
+@app.post("/api/check_halal_stock")
+async def check_halal(request: SymbolRequest):
+    symbol = request.symbol
+
+    try:
+        criteria_results, score = await check_halal_stock(symbol)
+        return {"message": "Halal check performed successfully", "criteria_results": criteria_results, "score": score}
+    except CustomException as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.get("/api/get_newsfeed")
 async def get_newsfeed():
