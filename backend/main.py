@@ -58,7 +58,7 @@ async def get_company_data(request: SymbolRequest):
     return {"message": "Company data fetched successfully", "data": combined_data}
 
 @app.post("/api/check_halal_stock")
-async def check_halal(request: SymbolRequest):
+async def check_halal():
     symbol = "MSFT"
 
     try:
