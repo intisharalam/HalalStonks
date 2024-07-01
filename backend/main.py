@@ -59,7 +59,7 @@ async def get_company_data(request: SymbolRequest):
 
 @app.post("/api/check_halal_stock")
 async def check_halal(request: SymbolRequest):
-    symbol = request.symbol
+    symbol = "MSFT"
 
     try:
         criteria_results, score = await check_halal_stock(symbol)
