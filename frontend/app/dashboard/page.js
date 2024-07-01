@@ -14,7 +14,6 @@ import { useRouter } from 'next/navigation';
 
 export default function Dashboard() {
   const [selectedSymbol, setSelectedSymbol] = useState('');
-  const [loadingHalal, setLoadingHalal] = useState(false);
   const [companyData, setCompanyData] = useState({});
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -23,10 +22,8 @@ export default function Dashboard() {
     const fetchData = async () => {
       if (router.query && router.query.symbol) {
         const { symbol } = router.query;
-        await Promise.all([
-          fetchCompanyData(symbol),
-          fetchHalalStockData(symbol)
-        ]);
+        setSelectedSymbol(symbol);
+        await fetchCompanyData(symbol);
       }
     };
   
@@ -42,7 +39,7 @@ export default function Dashboard() {
       const companyResponse = await axios.post('https://halal-stonks-backend.vercel.app/api/get_company_data', { symbol });
       const companyData = companyResponse.data;
       setCompanyData(companyData);
-      console.log(companyData.data)
+      console.log(companyData.data['Halal Stock Criteria Results'])
     } catch (error) {
       console.error('Error fetching data:', error);
       setCompanyData({}); // Optionally, handle error state
@@ -50,25 +47,6 @@ export default function Dashboard() {
       setLoading(false);
     }
   };
-
-  const fetchHalalStockData = async (symbol) => {
-    setLoadingHalal(true);
-    try {
-      const halalResponse = await axios.post('https://halal-stonks-backend.vercel.app/api/check_halal_stock', { symbol });
-      const halalData = halalResponse.data;
-      setHalalStockData(halalData);
-            
-      console.log(halalData.criteria_results);
-      console.log(halalData.score);
-      
-    } catch (error) {
-      console.error('Error fetching halal stock data:', error);
-      setHalalStockData({}); // Optionally, handle error state
-    } finally {
-      setLoadingHalal(false);
-    }
-  };
-
 
   const handleSymbolSelect = async (symbol) => {
     setSelectedSymbol(symbol);
@@ -148,16 +126,30 @@ export default function Dashboard() {
   
   const computeShariahCriteria = (data) => {
     const criteriaAnalysis = [];
-  
-    // Example criteria based on boolean values
-    criteriaAnalysis.push({ criteria: 'Industry', limit: 'Not Haram*', result: data[0] ? 'Y' : 'N' });
-    criteriaAnalysis.push({ criteria: 'Haram Income', limit: '<5%',result: data[1] ? 'Y' : 'N' });
-    criteriaAnalysis.push({ criteria: 'Interest-Debt-to-Asset Ratio', limit: '<33%', result: data[2] ? 'Y' : 'N' });
-    criteriaAnalysis.push({ criteria: 'Illiquid Asset Ratio', limit: '>20%', result: data[3] ? 'Y' : 'N' });
-    criteriaAnalysis.push({ criteria: 'Net Liquid Asset to Market Cap', limit: '<Market Cap', result: data[4] ? 'Y' : 'N' });
-  
+    
+    if (!data || !Array.isArray(data) || data.length !== 5) {
+      // Handle case where data is not valid or not provided
+      criteriaAnalysis.push(
+        { criteria: 'Industry', limit: 'Not Haram*', result: '---' },
+        { criteria: 'Haram Income', limit: '<5%', result: '---' },
+        { criteria: 'Interest-Debt-to-Asset Ratio', limit: '<33%', result: '---' },
+        { criteria: 'Illiquid Asset Ratio', limit: '>20%', result: '---' },
+        { criteria: 'Net Liquid Asset to Market Cap', limit: '<Market Cap', result: '---' }
+      );
+    } else {
+      // Example criteria based on boolean values
+      criteriaAnalysis.push(
+        { criteria: 'Industry', limit: 'Not Haram*', result: data[0] ? 'Y' : 'N' },
+        { criteria: 'Haram Income', limit: '<5%', result: data[1] ? 'Y' : 'N' },
+        { criteria: 'Interest-Debt-to-Asset Ratio', limit: '<33%', result: data[2] ? 'Y' : 'N' },
+        { criteria: 'Illiquid Asset Ratio', limit: '>20%', result: data[3] ? 'Y' : 'N' },
+        { criteria: 'Net Liquid Asset to Market Cap', limit: '<Market Cap', result: data[4] ? 'Y' : 'N' }
+      );
+    }
+    
     return criteriaAnalysis;
   };
+  
   
 
   return (
@@ -194,11 +186,21 @@ export default function Dashboard() {
       </div>
 
       <div className={styles.cardRow}>
-        <Card
-          topText="Status"
-          middleText="Halal"
-          bottomText="Score: 13/13"
-        />
+            <Card
+        topText="Status"
+        middleText={
+          loading
+            ? 'Loading...'
+            : companyData.data && companyData.data['Halal Score'] !== undefined
+            ? companyData.data['Halal Score'] === 5
+              ? 'Halal'
+              : 'Haram'
+            : '---'
+        }
+        bottomText={ loading ? 'Loading...': companyData.data && companyData.data['Halal Score'] !== undefined? `Score: ${companyData.data['Halal Score']}/5`: ''
+            }/>
+
+
         <Card
           topText="P/E ratio"
           middleText={loading ? 'Loading...' : (companyData.data ? companyData.data['P/E Ratio'] : '---')}
@@ -230,10 +232,15 @@ export default function Dashboard() {
   
         <div className={styles.halalCriteria}>
           <CriteriaTable
-            criteriaData={computeShariahCriteria([true, true, true, true, true])}
+            criteriaData={
+              companyData.data && companyData.data['Halal Stock Criteria Results']
+                ? computeShariahCriteria(companyData.data['Halal Stock Criteria Results'])
+                : []
+            }
             title="Sharia Law Criteria"
           />
         </div>
+
   
         <div className={styles.balanceSheets}>
           <BarChart chartData={loading ? [] : (companyData.data ? companyData.data['Assets&Liabilities'] : [{ year: '---', assets: 0, liabilities: 0 },])} />

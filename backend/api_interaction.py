@@ -91,6 +91,11 @@ async def fetch_company_financial_data(symbol):
         Interrupted_Dividends = (df['Dividends'] <= 0).any()
         print( not Interrupted_Dividends)
 
+        
+
+        # Check halal stock criteria
+        halal_criteria_results, halal_score = await check_halal_stock(symbol)
+
 
 
         # Fetch balance sheet data
@@ -140,12 +145,8 @@ async def fetch_company_financial_data(symbol):
                 "Assets&Liabilities": Assets_Liabilities if Assets_Liabilities else [{ 'year': '---', 'assets': 0, 'liabilities': 0 }],
                 "Close Prices": historical_price if historical_price else [{ 'time': '---', 'price': 0 }],
 
-                "Total Non-Sharia Income": 0,
-                "Total Interest-bearing Debt": 0,
-                "Interest Income Percentage": 0,
-                "Total Cash and Equivalents": 0,
-                "Total Interest-bearing Investments": 0,
-                "Non-Permissible Income Percentage": 0,
+                "Halal Stock Criteria Results": halal_criteria_results if halal_criteria_results else [False,False,False,False,False],
+                "Halal Score": halal_score if halal_score else 0
         }
 
     except Exception as e:
@@ -157,7 +158,7 @@ async def check_halal_stock(ticker):
     try:
         # Fetch annual financial data
         balance_sheet, income_statement, info = get_annual_financials(ticker)
-        
+
         # Initialize variables to track results
         criteria_results = []
         score = 0
