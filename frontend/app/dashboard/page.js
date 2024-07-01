@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation';
 
 export default function Dashboard() {
   const [selectedSymbol, setSelectedSymbol] = useState('');
+  const [loadingHalal, setLoadingHalal] = useState(false);
   const [companyData, setCompanyData] = useState({});
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -22,8 +23,10 @@ export default function Dashboard() {
     const fetchData = async () => {
       if (router.query && router.query.symbol) {
         const { symbol } = router.query;
-        setSelectedSymbol(symbol);
-        await fetchCompanyData(symbol);
+        await Promise.all([
+          fetchCompanyData(symbol),
+          fetchHalalStockData(symbol)
+        ]);
       }
     };
   
@@ -47,6 +50,25 @@ export default function Dashboard() {
       setLoading(false);
     }
   };
+
+  const fetchHalalStockData = async (symbol) => {
+    setLoadingHalal(true);
+    try {
+      const halalResponse = await axios.post('https://halal-stonks-backend.vercel.app/api/check_halal_stock', { symbol });
+      const halalData = halalResponse.data;
+      setHalalStockData(halalData);
+            
+      console.log(halalData.criteria_results);
+      console.log(halalData.score);
+      
+    } catch (error) {
+      console.error('Error fetching halal stock data:', error);
+      setHalalStockData({}); // Optionally, handle error state
+    } finally {
+      setLoadingHalal(false);
+    }
+  };
+
 
   const handleSymbolSelect = async (symbol) => {
     setSelectedSymbol(symbol);
@@ -127,49 +149,12 @@ export default function Dashboard() {
   const computeShariahCriteria = (data) => {
     const criteriaAnalysis = [];
   
-    // Revenue from Haram Activities
-    const totalRevenue = parseFloat(data.data && data.data['Total Revenue']) || 0;
-    const nonPermissibleIncome = parseFloat(data.data && data.data['Non-Permissible Income Percentage']) / 100 * totalRevenue;
-    if (nonPermissibleIncome < 0.05 * totalRevenue) {
-      criteriaAnalysis.push({ criteria: 'Revenue from Haram Activities', limit: '<5% of Total Revenue', result: 'Y' });
-    } else {
-      criteriaAnalysis.push({ criteria: 'Revenue from Haram Activities', limit: '<5% of Total Revenue', result: 'N' });
-    }
-  
-    // Interest-bearing Debt
-    const totalDebt = parseFloat(data.data && data.data['Total Interest-bearing Debt']) || 0;
-    const totalAssets = parseFloat(data.data && data.data['Assets&Liabilities'][0].assets) || 1; // Default to 1 to avoid division by zero
-    if (totalDebt < 0.33 * totalAssets) {
-      criteriaAnalysis.push({ criteria: 'Interest-bearing Debt', limit: '<33% of Total Assets', result: 'Y' });
-    } else {
-      criteriaAnalysis.push({ criteria: 'Interest-bearing Debt', limit: '<33% of Total Assets', result: 'N' });
-    }
-  
-    // Interest Income
-    const interestIncome = parseFloat(data.data && data.data['Interest Income Percentage']) || 0;
-    if (interestIncome < 0.05 * totalRevenue) {
-      criteriaAnalysis.push({ criteria: 'Interest Income', limit: '<5% of Total Revenue', result: 'Y' });
-    } else {
-      criteriaAnalysis.push({ criteria: 'Interest Income', limit: '<5% of Total Revenue', result: 'N' });
-    }
-  
-    // Cash & Interest-bearing Investment
-    const cashAndEquivalents = parseFloat(data.data && data.data['Total Cash and Equivalents']) || 0;
-    const interestBearingInvestments = parseFloat(data.data && data.data['Total Interest-bearing Investments']) || 0;
-    if ((cashAndEquivalents + interestBearingInvestments) < 0.33 * totalAssets) {
-      criteriaAnalysis.push({ criteria: 'Cash & Interest-bearing Investment', limit: '<33% of Total Assets', result: `Y` });
-    } else {
-      criteriaAnalysis.push({ criteria: 'Cash & Interest-bearing Investment', limit: '<33% of Total Assets', result: `N` });
-    }
-  
-    // Halal Sector
-    const nonHalalSectors = ['alcohol', 'gambling']; // Example non-permissible sectors
-    const sector = data.data && data.data['Sector'] ? data.data['Sector'].toLowerCase() : '';
-    if (sector && !nonHalalSectors.includes(sector)) {
-      criteriaAnalysis.push({ criteria: 'Halal Sector', limit: ' Not from non-permissible ones', result: 'Y' });
-    } else {
-      criteriaAnalysis.push({ criteria: 'Halal Sector', limit: 'Not from non-permissible ones', result: 'N' });
-    }
+    // Example criteria based on boolean values
+    criteriaAnalysis.push({ criteria: 'Industry', limit: 'Not Haram*', result: data[0] ? 'Y' : 'N' });
+    criteriaAnalysis.push({ criteria: 'Haram Income', limit: '<5%',result: data[1] ? 'Y' : 'N' });
+    criteriaAnalysis.push({ criteria: 'Interest-Debt-to-Asset Ratio', limit: '<33%', result: data[2] ? 'Y' : 'N' });
+    criteriaAnalysis.push({ criteria: 'Illiquid Asset Ratio', limit: '>20%', result: data[3] ? 'Y' : 'N' });
+    criteriaAnalysis.push({ criteria: 'Net Liquid Asset to Market Cap', limit: '<Market Cap', result: data[4] ? 'Y' : 'N' });
   
     return criteriaAnalysis;
   };
@@ -245,7 +230,7 @@ export default function Dashboard() {
   
         <div className={styles.halalCriteria}>
           <CriteriaTable
-            criteriaData={computeShariahCriteria(companyData)}
+            criteriaData={computeShariahCriteria([true, true, true, true, true])}
             title="Sharia Law Criteria"
           />
         </div>
