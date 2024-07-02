@@ -24,6 +24,9 @@
     .middleText {
         font-weight: 600;
         font-size: clamp(1rem, 4vw, 64px);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .bottomText {

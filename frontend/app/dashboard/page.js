@@ -169,9 +169,9 @@ export default function Dashboard() {
               </div>
               <div className={styles.sector}>
                 {companyData.data && Object.keys(companyData.data).length > 0 ? (
-                  `Sector: ${companyData.data['Sector']}`
+                  `Industry: ${companyData.data['Industry']}`
                 ) : (
-                  'Sector: ---'
+                  'Industry: ---'
                 )}
               </div>
             </>
@@ -186,19 +186,38 @@ export default function Dashboard() {
       </div>
 
       <div className={styles.cardRow}>
-            <Card
-        topText="Status"
-        middleText={
-          loading
-            ? 'Loading...'
-            : companyData.data && companyData.data['Halal Score'] !== undefined
-            ? companyData.data['Halal Score'] === 5
-              ? 'Halal'
-              : 'Haram'
-            : '---'
-        }
-        bottomText={ loading ? 'Loading...': companyData.data && companyData.data['Halal Score'] !== undefined? `Score: ${companyData.data['Halal Score']}/5`: ''
-            }/>
+        <Card
+          topText="Halal Status"
+          middleText={
+            loading
+              ? 'Loading...'
+              : companyData.data && companyData.data['Halal Stock Criteria Results']
+              ? !companyData.data['Halal Stock Criteria Results'][0]
+                ? 'Disgrace'
+                : companyData.data['Halal Score'] !== undefined
+                ? companyData.data['Halal Score'] === 5
+                  ? 'Strong'
+                  : companyData.data['Halal Score'] === 4
+                  ? 'Medium'
+                  : companyData.data['Halal Score'] === 3
+                  ? 'Weak'
+                  : companyData.data['Halal Score'] === 2
+                  ? 'Doubtful'
+                  : 'Disgrace'
+                : '---'
+              : '---'
+          }
+          bottomText={
+            loading
+              ? 'Loading...'
+              : companyData.data && companyData.data['Halal Score'] !== undefined
+              ? `Score: ${companyData.data['Halal Score']}/5`
+              : ''
+          }
+        />
+
+
+
 
 
         <Card

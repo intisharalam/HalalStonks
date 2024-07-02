@@ -62,8 +62,9 @@ async def fetch_company_financial_data(symbol):
         stock = yf.Ticker(symbol)
 
         profile_data = stock.info
-        profile_data = clean_profile_data(profile_data)
         #print(profile_data)
+        profile_data = clean_profile_data(profile_data)
+        
 
         historical_price = stock.history(period='2y', interval='1wk')
         historical_price = historical_price.to_dict('index')
@@ -129,7 +130,7 @@ async def fetch_company_financial_data(symbol):
         return {
                 "Company Name": profile_data.get('Company Name', 'N/A'),
                 "Symbol": symbol,
-                "Sector": profile_data.get('Sector', 'N/A'),
+                "Industry": profile_data.get('Industry', 'N/A'),
                 "Market Cap": profile_data['Financials'].get('Market Cap', '0'),
                 "Beta": profile_data['Other Information'].get('Beta', '0'),
 
@@ -411,7 +412,7 @@ def round_if_numeric(value, decimals=2):
 
 def clean_profile_data(profile_data):
     cleaned_data = {
-        "Symbol": profile_data.get("symbol", "N/A"),
+        "Industry": profile_data.get("industry", "N/A"),
         "Company Name": profile_data.get("longName", "N/A"),
         "Sector": profile_data.get("sector", "N/A"),
         "Industry": profile_data.get("industry", "N/A"),
