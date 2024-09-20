@@ -154,7 +154,6 @@ async def fetch_company_financial_data(symbol):
         handle_api_exception(e)
         raise CustomException(f"An error occurred while fetching company financial data: {str(e)}")
 
-
 async def check_halal_stock(ticker):
     try:
         # Fetch annual financial data
